@@ -1,4 +1,4 @@
-#calculator3
+# calculator3
 
 def prompt(message)
   Kernel.puts("=> #{message}")
@@ -6,6 +6,19 @@ end
 
 def valid_num?(num1)
   num1 != 0
+end
+
+def operation_to_message(op)
+  case op
+  when '1'
+    'adding'
+  when '2'
+    'subtracting'
+  when '3'
+    'multiplying'
+  when '4'
+    'dividing'
+  end
 end
 
 prompt("Welcome to the calculator! Enter your name:")
@@ -44,8 +57,15 @@ loop do
   end
 end
 
+operator_prompt = <<-MSG
+What operation would you like to perform?
+  1) Add
+  2) Subtract
+  3) Multiply
+  4) Divide
+MSG
 
-prompt("What would you like to perform? 1)Add, 2)Subtract, 3)Multiply, 4)Divide")
+prompt(operator_prompt)
 
 operation = ''
 
@@ -57,6 +77,8 @@ operation = Kernel.gets().chomp()
     prompt("Please choose from 1, 2, 3 or 4")
   end
 end
+
+prompt("#{operation_to_message(operation)} the two numbers...")
 
 result = case operation
 when '1'
