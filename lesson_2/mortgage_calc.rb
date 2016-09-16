@@ -1,12 +1,12 @@
 puts("Welcome to mortgage calculator!")
 
 loop do
-  loan_amn = ''
+  loan_amnount = ''
 
   loop do
     puts("Please enter the amount of loan")
-    loan_amn = gets.chomp.to_f
-    if loan_amn < 0
+    loan_amnount = gets.chomp.to_f
+    if loan_amount < 0
       puts("Please enter a positive number")
     else
       break
@@ -17,24 +17,34 @@ loop do
 
   loop do
     puts("Please enter the Annual Percentage Rate")
-    apr = gets.chomp.to_i
+    apr = gets.chomp.to_f
 
     if apr > 100
       puts("That's impossible!!")
+    elsif apr <= 0
+      puts("Sorry, that's not a valid rate")
     else
-      apr_in_float = apr.to_f / 100
+      apr_in_float = apr / 100
       break
     end
   end
 
-  puts("Please enter the loan duration in months")
+  loan_dur = ''
+  loop do
+    puts("Please enter the loan duration in months")
+    loan_duration = gets.chomp.to_i
 
-  loan_dur = gets.chomp.to_i
+    if loan_duration <= 0
+      puts("Please enter 1-12")
+    else
+      break
+    end
+  end
 
-  monthly_int_rate = apr_in_float / 12
+  monthly_interest_rate = apr_in_float / 12
 
   monthly_payment =
-    loan_amn * (monthly_int_rate / (1 - (1 + monthly_int_rate)**-loan_dur))
+    loan_amn * (monthly_interest_rate / (1 - (1 + monthly_interest_rate)**-loan_dur))
 
   puts("Your monthly payment is #{monthly_payment}")
   puts("Would you like to calculate again?")
