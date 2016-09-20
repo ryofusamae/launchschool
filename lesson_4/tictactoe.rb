@@ -17,6 +17,7 @@ def display_board(brd)
   system 'clear'
   puts "You're a #{PLAYER_MARKER}"
   puts "Computer is a #{COMPUTER_MARKER}"
+  puts "Whoever earn 5 points first is the winner!"
   puts " "
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -69,9 +70,9 @@ end
 
 def detect_winner(brd)
   WINNING_PATTERN.each do |line|
-    if brd.value_at(line[0], line[1], line[2]).count(PLAYER_MARKER) == 3
+    if brd.values_at(line[0], line[1], line[2]).count(PLAYER_MARKER) == 3
       return 'Player'
-    elsif brd.value_at(line[0], line[1], line[2]).count(COMPUTER_MARKER) == 3
+    elsif brd.values_at(line[0], line[1], line[2]).count(COMPUTER_MARKER) == 3
       return 'Computer'
     end
   end
@@ -79,25 +80,54 @@ def detect_winner(brd)
 end
 
 loop do
-  board = initialize_board
-  display_board(board)
+
+  player_score = 0
+  computer_score = 0
 
   loop do
-    user_places_piece!(board)
-    computer_places_piece!(board)
+
+    board = initialize_board
     display_board(board)
-    break if someone_won?(board) || board_full?(board)
+
+    loop do
+      user_places_piece!(board)
+      display_board(board)
+      break if someone_won?(board) || board_full?(board)
+      computer_places_piece!(board)
+      display_board(board)
+      break if someone_won?(board) || board_full?(board)
+    end
+
+    if someone_won?(board)
+      prompt "#{detect_winner(board)} +1!"
+      if detect_winner(board) == "Player"
+        player_score += 1
+      elsif detect_winner(board) == "Computer"
+        computer_score += 1
+      end
+
+    else
+      prompt "It's a tie."
+    end
+
+    prompt "Your score: #{player_score}, Computer score: #{computer_score}"
+
+    break if player_score == 5 || computer_score == 5
+
+    prompt "keep playing? (y/n)"
+    answer = gets.chomp
+    break unless answer.downcase.start_with?("y")
   end
 
-  if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
+  if player_score == 5
+    prompt "You Win!"
   else
-    prompt "It's a tie."
+    prompt "Computer wins!"
   end
 
-  prompt "Would you like to play it again? (y or n)"
+  prompt "Play again? (y/n)"
   play_again = gets.chomp
-  break unless play_again.downcase.start_with?("y")
+  break unless play_again.downcase.start_with("y")
 end
 
 prompt "Thanks for playing!"
